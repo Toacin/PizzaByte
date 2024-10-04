@@ -1,0 +1,20 @@
+{
+  "name": "pizzabyte",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Toacin/PizzaByte.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Toacin/PizzaByte/issues"
+  },
+  "homepage": "https://github.com/Toacin/PizzaByte#readme"
+}
