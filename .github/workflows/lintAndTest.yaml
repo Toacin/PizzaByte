@@ -12,7 +12,7 @@ jobs:
   # This workflow contains a single job called "lintAndTest"
   lintAndTest:
     env:
-      JAWSDB_URL: ${{ secrets.JAWSDB_URL }} # If using JAWSDB_URL
+      JAWSDB_URL: ${{ secrets.JAWSDB_URL }}
       GH_SECRET_USER: ${{ secrets.DB_USER }}
       GH_SECRET_HOST: ${{ secrets.DB_HOST }}
       GH_SECRET_DATABASE: ${{ secrets.DB_DATABASE }}
