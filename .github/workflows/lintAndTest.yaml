@@ -41,4 +41,4 @@ jobs:
         run: npm run lint
       # Run Tests
       - name: Run Tests
-        run: npm test --prefix backend
+        run: npm run test
