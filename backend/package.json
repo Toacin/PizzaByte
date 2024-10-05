@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "npm run migrate && node app.js",
+    "start": "node app.js",
     "dev": "npm run migrate && nodemon app.js",
     "migrate": "sequelize-cli db:migrate",
     "lint": "eslint .",
