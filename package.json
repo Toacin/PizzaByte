@@ -9,6 +9,7 @@
     "format": "npm --prefix frontend run format && npm --prefix backend run format",
     "dev": "concurrently \"npm run dev --prefix backend\" \"npm run start --prefix frontend\"",
     "install": "cd ./frontend && npm install && cd ../backend && npm install",
+    "build": "cd ./frontend && npm run build",
     "start": "cd ./backend && npm run start",
     "heroku-postbuild": "npm install --prefix frontend && npm run build --prefix frontend"
   },
