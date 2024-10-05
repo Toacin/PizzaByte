@@ -3,9 +3,8 @@ import "./App.css";
 import { useEffect } from "react";
 
 function App() {
-
   useEffect(() => {
-    (async function() {
+    (async function () {
       const response = await fetch("/api", {
         method: "GET",
         headers: {
