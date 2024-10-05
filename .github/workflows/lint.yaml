@@ -11,6 +11,12 @@ on:
 jobs:
   # This workflow contains a single job called "lintAndTest"
   lintAndTest:
+    env:
+      GH_SECRET_HOST: ${{ secrets.DB_HOST }}
+      GH_SECRET_USER: ${{ secrets.DB_USER }}
+      GH_SECRET_PORT: ${{ secrets.DB_PORT }}
+      GH_SECRET_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      GH_SECRET_DATABASE: ${{ secrets.DB_DATABASE }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -20,6 +26,17 @@ jobs:
       # install dependencies
       - name: Install dependencies 
         run: npm install
+
+      # Set up MySQL
+      - name: Set up MySQL
+        run: |
+          sudo /etc/init.d/mysql start
+          mysql -e "CREATE DATABASE $GH_SECRET_DATABASE;" -u$GH_SECRET_USER -p$GH_SECRET_PASSWORD
+      - name: Run Migrations
+        run: npx sequelize-cli db:migrate --env test
+      - name: Seed Database
+        run: npx sequelize-cli db:seed:all --env test
+
       # linting and formatting checks
       - name: Run Format
         run: npm run format
