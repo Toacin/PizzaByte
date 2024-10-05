@@ -7,8 +7,10 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "npm --prefix frontend run lint && npm --prefix backend run lint",
     "format": "npm --prefix frontend run format && npm --prefix backend run format",
-    "start": "concurrently \"npm run dev --prefix backend\" \"npm run start --prefix frontend\"",
-    "install": "cd ./frontend && npm install && cd ../backend && npm install"
+    "dev": "concurrently \"npm run dev --prefix backend\" \"npm run start --prefix frontend\"",
+    "install": "cd ./frontend && npm install && cd ../backend && npm install",
+    "start": "cd ./backend && npm run start",
+    "heroku-postbuild": "npm install --prefix frontend && npm run build --prefix frontend"
   },
   "repository": {
     "type": "git",
