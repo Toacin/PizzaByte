@@ -4,11 +4,12 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
-    "dev": "npm run migrate && nodemon app.js",
+    "start": "npm run migrate && npm run seed && node app.js",
+    "dev": "npm run migrate && npm run seed && nodemon app.js",
     "migrate": "sequelize-cli db:migrate",
     "lint": "eslint .",
-    "format": "prettier --write \"**/*.{js,json}\""
+    "format": "prettier --write \"**/*.{js,json}\"",
+    "seed": "sequelize-cli db:seed:all"
   },
   "keywords": [],
   "author": "",
