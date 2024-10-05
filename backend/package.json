@@ -7,9 +7,12 @@
     "start": "npm run migrate && npm run seed && node app.js",
     "dev": "npm run migrate && npm run seed && nodemon app.js",
     "migrate": "sequelize-cli db:migrate",
+    "migrateTestDb": "sequelize-cli db:migrate --env test",
     "lint": "eslint .",
     "format": "prettier --write \"**/*.{js,json}\"",
-    "seed": "sequelize-cli db:seed:all"
+    "seed": "sequelize-cli db:seed:all",
+    "seedTestDb": "sequelize-cli db:seed:all --env test",
+    "test": "npm run migrateTestDb && npm run seedTestDb && jest --coverage --detectOpenHandles --forceExit"
   },
   "keywords": [],
   "author": "",
