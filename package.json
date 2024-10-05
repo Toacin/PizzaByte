@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "cd ./backend && npm run test",
+    "test": "cd ./backend && npm run test && cd ../frontend && npm run test",
     "lint": "npm --prefix frontend run lint && npm --prefix backend run lint",
     "format": "npm --prefix frontend run format && npm --prefix backend run format",
     "dev": "cd ./frontend && npm run build && cd ../backend && npm run dev",
