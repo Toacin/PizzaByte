@@ -32,13 +32,7 @@ jobs:
       - name: Set up MySQL
         run: |
           sudo /etc/init.d/mysql start
-          # You may need to adapt the command below if you want to connect to a different host
           # mysql -e "CREATE DATABASE $GH_SECRET_DATABASE;" -u$GH_SECRET_USER -p$GH_SECRET_PASSWORD
-
-      - name: Run Migrations
-        run: npx sequelize-cli db:migrate --env test
-      - name: Seed Database
-        run: npx sequelize-cli db:seed:all --env test
 
       # linting and formatting checks
       - name: Run Format
