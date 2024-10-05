@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const log = require("./logger");
 const path = require("path");
 const models = require("./models");
+const APIRoutes = require("./APIroutes");
 
 const { PizzaByteTestTable } = models;
 
@@ -22,12 +23,7 @@ function startServer() {
   app.use(express.static(path.join(__dirname, "../frontend/build")));
 
   // API endpoint
-  app.get("/api", async (req, res) => {
-    const testTable = await PizzaByteTestTable.findAll();
-    const firstName = testTable[0].name;
-    const returnString = `Hello ${firstName}!`;
-    res.json(returnString);
-  });
+  app.use("/api", APIRoutes);
 
   // Catch-all route: for React client-side routing
   app.get("*", (req, res) => {

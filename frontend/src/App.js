@@ -5,7 +5,7 @@ import { useEffect } from "react";
 function App() {
   useEffect(() => {
     (async function () {
-      const response = await fetch("/api", {
+      const response = await fetch("/api/testRoute", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

@@ -1,0 +1,44 @@
+# This is a basic workflow for linting and formatting checks, as well as running tests
+name: app-linter-and-tester
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  # This workflow contains a single job called "lintAndTest"
+  lintAndTest:
+    env:
+      JAWSDB_URL: ${{ secrets.JAWSDB_URL }} # If using JAWSDB_URL
+      GH_SECRET_USER: ${{ secrets.DB_USER }}
+      GH_SECRET_HOST: ${{ secrets.DB_HOST }}
+      GH_SECRET_DATABASE: ${{ secrets.DB_DATABASE }}
+      GH_SECRET_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      GH_SECRET_PORT: ${{ secrets.DB_PORT }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 16.17.1
+      # install dependencies
+      - name: Install dependencies 
+        run: npm install
+
+      # Set up MySQL
+      - name: Set up MySQL
+        run: |
+          sudo /etc/init.d/mysql start
+          # mysql -e "CREATE DATABASE $GH_SECRET_DATABASE;" -u$GH_SECRET_USER -p$GH_SECRET_PASSWORD
+
+      # linting and formatting checks
+      - name: Run Format
+        run: npm run format
+      - name: Run Lint
+        run: npm run lint
+      # Run Tests
+      - name: Run Tests
+        run: npm test --prefix backend
