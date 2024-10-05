@@ -1,5 +1,6 @@
 require("dotenv").config();
 const startServer = require("./server");
+const log = require("./logger");
 
 async function startApp() {
   // start server
@@ -8,7 +9,7 @@ async function startApp() {
   // Graceful shutdown
   const shutdown = () => {
     httpServer.close(() => {
-      console.log("HTTP server closed.");
+      log.info("HTTP server closed.");
     });
   };
 
