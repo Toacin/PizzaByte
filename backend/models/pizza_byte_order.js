@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       this.belongsTo(models.PizzaByteUser, {
         foreignKey: "pizzaByteUserId",
-        onDelete: "CASCADE",
+        onDelete: "SET NULL",
       });
     }
   }
