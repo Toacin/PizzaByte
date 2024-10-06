@@ -1,28 +1,18 @@
 import "./App.css";
-import { useEffect } from "react";
 import { GlobalStateProvider } from "./GlobalStateProvider";
 import Header from "./components/Header/Header";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Home from "./pages/Home/Home";
 
 function App() {
-  useEffect(() => {
-    (async function () {
-      const response = await fetch("/api/classics", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      if (!response.ok) {
-        console.error("Request Failed");
-      }
-      const data = await response.json();
-      console.log(data);
-    })();
-  }, []);
-
   return (
     <GlobalStateProvider>
       <Header />
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home />} />
+        </Routes>
+      </Router>
     </GlobalStateProvider>
   );
 }
