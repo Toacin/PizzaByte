@@ -2,7 +2,7 @@ const request = require("supertest");
 const startServer = require("../../server");
 const { PizzaByteUser } = require("../../models");
 
-describe("GET /api/auth", () => {
+describe("GET /api/orders", () => {
   let server;
   let serverApp;
 

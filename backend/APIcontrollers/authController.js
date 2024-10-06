@@ -3,7 +3,7 @@ const log = require("../logger");
 const signAuthToken = require("../utils/signAuthToken");
 
 const signup = async (req, res) => {
-  const { firstName, email, password } = req.body;
+  const { firstName, email, password, role = "user" } = req.body;
   if (!firstName || !email || !password) {
     return res
       .status(400)
@@ -20,11 +20,17 @@ const signup = async (req, res) => {
     }
 
     // create user
-    const newUser = await PizzaByteUser.create({ firstName, email, password });
+    const newUser = await PizzaByteUser.create({
+      firstName,
+      email,
+      password,
+      role,
+    });
     const signedToken = signAuthToken(
       newUser.firstName,
       newUser.email,
       newUser.id,
+      newUser.role,
     );
 
     const createdUserJSON = newUser.toJSON();
@@ -74,6 +80,7 @@ const login = async (req, res) => {
       existingUser.firstName,
       existingUser.email,
       existingUser.id,
+      existingUser.role,
     );
 
     const userJSON = existingUser.toJSON();
