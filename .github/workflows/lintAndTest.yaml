@@ -18,6 +18,7 @@ jobs:
       GH_SECRET_DATABASE: ${{ secrets.DB_DATABASE }}
       GH_SECRET_PASSWORD: ${{ secrets.DB_PASSWORD }}
       GH_SECRET_PORT: ${{ secrets.DB_PORT }}
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
