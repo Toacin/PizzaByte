@@ -66,7 +66,7 @@ describe("GET /api/classics", () => {
 
     expect(response2.status).toBe(400);
     expect(response2.body.error).toBe(true);
-    expect(response2.body.message).toBe("Classic already exists");
+    expect(response2.body.message).toBe("Classic name already exists");
 
     expect(response3.status).toBe(200);
     expect(response3.body.message).toBe("Classic deleted successfully");
