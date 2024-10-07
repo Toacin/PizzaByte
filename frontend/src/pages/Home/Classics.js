@@ -29,9 +29,9 @@ export default function Classics() {
           console.error("Request Failed");
           if (response.status !== 500) {
             const errorData = await response.json();
-            toast(errorData.message);
+            toast.error(errorData.message);
           } else {
-            toast("Something went wrong. Please try again later.");
+            toast.error("Something went wrong. Please try again later.");
           }
           return;
         }
@@ -39,7 +39,7 @@ export default function Classics() {
         setClassics(data.classics);
       } catch (err) {
         console.error(err.toString());
-        toast("Something went wrong. Please try again later.");
+        toast.error("Something went wrong. Please try again later.");
       }
     })();
   }, [classicsModified]);
@@ -83,9 +83,9 @@ export default function Classics() {
         console.error("Request Failed");
         if (response.status !== 500) {
           const errorData = await response.json();
-          toast(errorData.message);
+          toast.error(errorData.message);
         } else {
-          toast("Something went wrong. Please try again later.");
+          toast.error("Something went wrong. Please try again later.");
         }
         return;
       }
@@ -94,7 +94,7 @@ export default function Classics() {
       setClassicsModified(classicsModified + 1);
     } catch (err) {
       console.error(err.toString());
-      toast("Something went wrong. Please try again later.");
+      toast.error("Something went wrong. Please try again later.");
     }
   };
 
@@ -111,16 +111,16 @@ export default function Classics() {
         console.error("Request Failed");
         if (response.status !== 500) {
           const errorData = await response.json();
-          toast(errorData.message);
+          toast.error(errorData.message);
         } else {
-          toast("Something went wrong. Please try again later.");
+          toast.error("Something went wrong. Please try again later.");
         }
         return;
       }
       setClassicsModified(classicsModified + 1);
     } catch (err) {
       console.error(err.toString());
-      toast("Something went wrong. Please try again later.");
+      toast.error("Something went wrong. Please try again later.");
     }
   };
 
@@ -152,17 +152,17 @@ export default function Classics() {
             </ul>
             <div className="flex justify-center items-center mt-5">
               <button
-                className="bg-gray-500 cursor-not-allowed rounded p-2 mr-2"
-                disabled
+                className={`rounded p-2 ml-2 ${role === "owner" || role === "chef" ? "cursor-pointer bg-white" : "cursor-not-allowed bg-gray-500"}`}
+                disabled={role !== "owner" && role !== "chef"}
               >
-                Add to Cart
+                Edit
               </button>
               <button
                 className={`rounded p-2 ml-2 ${role === "owner" || role === "chef" ? "cursor-pointer bg-white" : "cursor-not-allowed bg-gray-500"}`}
                 onClick={() => deleteClassic(classic.id)}
                 disabled={role !== "owner" && role !== "chef"}
               >
-                Delete Classic
+                Delete
               </button>
             </div>
             <div className="flex items-center justify-center min-w-full mt-8">
