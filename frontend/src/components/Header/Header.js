@@ -15,8 +15,6 @@ export default function Header() {
     auth.logout();
   };
 
-  console.log(auth.loggedIn());
-
   return (
     <div className="fixed bg-black py-6 px-10 md:px-24 min-w-full z-10">
       <div className="flex justify-between items-center">
