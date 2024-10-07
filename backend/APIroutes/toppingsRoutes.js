@@ -8,6 +8,6 @@ const authenticateToken = require("../middlewares/authenticateUserToken");
 
 router.get("/", controller.getToppings);
 router.post("/", authenticateToken, controller.addToppings);
-router.delete("/:toppingId", authenticateToken, controller.deleteTopping);
+router.delete("/:toppingName", authenticateToken, controller.deleteTopping);
 
 module.exports = router;

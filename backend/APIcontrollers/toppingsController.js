@@ -53,9 +53,9 @@ const getToppings = async (req, res) => {
 };
 
 const deleteTopping = async (req, res) => {
-  const { toppingId } = req.params;
+  const { toppingName } = req.params;
 
-  if (!toppingId) {
+  if (!toppingName) {
     return res
       .status(400)
       .json({ error: true, message: "Topping id is required" });
@@ -63,7 +63,9 @@ const deleteTopping = async (req, res) => {
 
   try {
     // check if topping exists
-    const topping = await PizzaByteToppings.findByPk(toppingId);
+    const topping = await PizzaByteToppings.findOne({
+      where: { toppingName: toppingName },
+    });
     if (!topping) {
       return res
         .status(400)

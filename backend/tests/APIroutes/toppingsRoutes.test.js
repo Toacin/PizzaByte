@@ -53,7 +53,7 @@ describe("GET /api/toppings", () => {
 
     // delete the topping
     const response3 = await request(serverApp)
-      .delete(`/api/toppings/${response.body.topping.id}`)
+      .delete(`/api/toppings/${response.body.topping.toppingName}`)
       .set("Authorization", `Bearer ${userToken}`);
 
     // check the responses
