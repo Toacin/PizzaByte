@@ -1,21 +1,20 @@
 import React, { createContext, useReducer, useContext } from "react";
-import auth from "./utils/auth";
 
 // Define initial state
-const initialState = {};
-
-initialState.role = auth.loggedIn() ? auth.getProfile().role : "user";
+const initialState = {
+  toppings: [],
+};
 
 // Define action types
 const actionTypes = {
-  SET_ROLE: "SET_ROLE",
+  SET_TOPPINGS: "SET_TOPPINGS",
 };
 
 // Create a reducer function
 const globalStateReducer = (state, action) => {
   switch (action.type) {
-    case actionTypes.SET_ROLE:
-      return { ...state, role: action.payload };
+    case actionTypes.SET_TOPPINGS:
+      return { ...state, toppings: action.payload };
     default:
       return state;
   }
