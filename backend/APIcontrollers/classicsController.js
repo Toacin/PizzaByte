@@ -26,7 +26,7 @@ const addClassic = async (req, res) => {
 
     const lowerCaseName = name.toLowerCase();
     const existingClassic = existingClassics.find(
-      (classic) => classic.name === lowerCaseName,
+      (classic) => classic.name.toLowerCase() === lowerCaseName,
     );
 
     if (existingClassic) {
