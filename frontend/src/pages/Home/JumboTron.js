@@ -13,7 +13,7 @@ export default function JumboTron() {
 
         <div className="absolute top-40 left-10 w-2/5">
           <img src={PizzaByteBlack} alt="PizzaByte Logo" />
-          <p className="absolute top-80 w-full text-4xl pt-4">
+          <p className="absolute top-36 md:top-80 w-full text-4xl pt-4">
             Quality Ingredients. Delicious Pizza
           </p>
         </div>
