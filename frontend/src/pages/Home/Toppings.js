@@ -26,9 +26,9 @@ export default function Toppings() {
           console.error("Request Failed");
           if (response.status !== 500) {
             const errorData = await response.json();
-            toast(errorData.message);
+            toast.error(errorData.message);
           } else {
-            toast("Something went wrong. Please try again later.");
+            toast.error("Something went wrong. Please try again later.");
           }
           return;
         }
@@ -38,7 +38,7 @@ export default function Toppings() {
         dispatch({ type: "SET_TOPPINGS", payload: allToppings });
       } catch (err) {
         console.error(err.toString());
-        toast("Something went wrong. Please try again later.");
+        toast.error("Something went wrong. Please try again later.");
       }
     })();
   }, [toppingModified]);
@@ -56,16 +56,16 @@ export default function Toppings() {
         console.error("Request Failed");
         if (response.status !== 500) {
           const errorData = await response.json();
-          toast(errorData.message);
+          toast.error(errorData.message);
         } else {
-          toast("Something went wrong. Please try again later.");
+          toast.error("Something went wrong. Please try again later.");
         }
         return;
       }
       setToppingModified(toppingModified + 1);
     } catch (err) {
       console.error(err.toString());
-      toast("Something went wrong. Please try again later.");
+      toast.error("Something went wrong. Please try again later.");
     }
   };
 
@@ -84,9 +84,9 @@ export default function Toppings() {
         console.error("Failed to add topping");
         if (response.status !== 500) {
           const errorData = await response.json();
-          toast(errorData.message);
+          toast.error(errorData.message);
         } else {
-          toast("Something went wrong. Please try again later.");
+          toast.error("Something went wrong. Please try again later.");
         }
         return;
       }
@@ -94,7 +94,7 @@ export default function Toppings() {
       setNewTopping("");
     } catch (err) {
       console.error(err.toString());
-      toast("Something went wrong. Please try again later.");
+      toast.error("Something went wrong. Please try again later.");
     }
   };
 
@@ -110,17 +110,29 @@ export default function Toppings() {
             <p className="text-xl md:text-3xl">
               {topping[0].toUpperCase() + topping.substring(1)}
             </p>
-            <button
-              className={`${
-                role === "owner"
-                  ? "bg-red-500 cursor-pointer"
-                  : "bg-gray-500 cursor-not-allowed"
-              } text-white rounded p-2`}
-              disabled={role !== "owner"}
-              onClick={() => deleteTopping(topping)}
-            >
-              Delete
-            </button>
+            <div>
+              <button
+                className={`${
+                  role === "owner"
+                    ? "bg-black cursor-pointer text-white"
+                    : "bg-gray-500 cursor-not-allowed"
+                } text-white rounded p-2 mr-2`}
+                disabled={role !== "owner"}
+              >
+                Edit
+              </button>
+              <button
+                className={`${
+                  role === "owner"
+                    ? "bg-red-500 cursor-pointer"
+                    : "bg-gray-500 cursor-not-allowed"
+                } text-white rounded p-2`}
+                disabled={role !== "owner"}
+                onClick={() => deleteTopping(topping)}
+              >
+                Delete
+              </button>
+            </div>
           </div>
         ))}
 
@@ -146,7 +158,7 @@ export default function Toppings() {
             type="submit"
             className={`${
               role === "owner"
-                ? "bg-green-500 cursor-pointer"
+                ? "bg-black cursor-pointer"
                 : "bg-gray-500 cursor-not-allowed"
             } text-white p-2 rounded mt-4`}
             disabled={role !== "owner"}

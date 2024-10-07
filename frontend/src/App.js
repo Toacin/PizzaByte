@@ -9,9 +9,9 @@ import { Toaster } from "react-hot-toast";
 function App() {
   return (
     <GlobalStateProvider>
-      <Header />
-      <Toaster />
       <Router>
+        <Header />
+        <Toaster />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/authentication" element={<Authentication />} />

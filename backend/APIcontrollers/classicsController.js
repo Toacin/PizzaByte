@@ -1,4 +1,5 @@
 const { PizzaByteClassics } = require("../models");
+const log = require("../logger");
 
 const getAllClassics = async (req, res) => {
   try {
@@ -22,6 +23,7 @@ const addClassic = async (req, res) => {
         .json({ error: true, message: "All fields are required" });
     }
 
+    // check for duplicate classics name
     const existingClassics = await PizzaByteClassics.findAll();
 
     const lowerCaseName = name.toLowerCase();
@@ -32,7 +34,30 @@ const addClassic = async (req, res) => {
     if (existingClassic) {
       return res
         .status(400)
-        .json({ error: true, message: "Classic already exists" });
+        .json({ error: true, message: "Classic name already exists" });
+    }
+
+    // check for duplicates toppings
+    const existingToppingsStringifiedSet = new Set();
+    for (const classic of existingClassics) {
+      const toppings = Object.keys(
+        JSON.parse(classic.toppingsStringified),
+      ).sort();
+      log.info(toppings);
+      existingToppingsStringifiedSet.add(JSON.stringify(toppings));
+    }
+
+    const newToppings = Object.keys(JSON.parse(toppingsStringified)).sort();
+    log.info("newToppings");
+    log.info(newToppings);
+
+    log.info(existingToppingsStringifiedSet.has(JSON.stringify(newToppings)));
+
+    if (existingToppingsStringifiedSet.has(JSON.stringify(newToppings))) {
+      return res.status(400).json({
+        error: true,
+        message: "Classic with the same toppings already exists",
+      });
     }
 
     const newClassic = await PizzaByteClassics.create({
@@ -45,6 +70,7 @@ const addClassic = async (req, res) => {
       message: "Classic added successfully",
     });
   } catch (error) {
+    log.error(error.toString());
     return res
       .status(500)
       .json({ error: true, message: "Something went wrong" });

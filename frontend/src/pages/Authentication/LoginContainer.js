@@ -34,9 +34,9 @@ export default function LoginContainer() {
         console.error("Request Failed");
         if (response.status !== 500) {
           const errorData = await response.json();
-          toast(errorData.message);
+          toast.error(errorData.message);
         } else {
-          toast("Something went wrong. Please try again later.");
+          toast.error("Something went wrong. Please try again later.");
         }
         return;
       }
@@ -45,7 +45,7 @@ export default function LoginContainer() {
       navigate("/");
     } catch (error) {
       console.error(error.toString());
-      toast("Something went wrong. Please try again later.");
+      toast.error("Something went wrong. Please try again later.");
     }
   };
 

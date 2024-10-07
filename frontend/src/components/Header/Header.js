@@ -1,14 +1,16 @@
 import pizzaByteSmallWhite from "../../assets/PizzaByteSmallWhite.png";
 import auth from "../../utils/auth";
+import { useNavigate } from "react-router-dom";
 
 export default function Header() {
-  // since header is not within the Router, we will navigate here with window.location
+  const navigate = useNavigate();
+
   const navigateHome = () => {
-    window.location.href = "/";
+    navigate("/");
   };
 
   const navigateAuthentication = () => {
-    window.location.href = "/authentication";
+    navigate("/authentication");
   };
 
   const logout = () => {
