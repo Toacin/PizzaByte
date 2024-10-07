@@ -1,9 +1,18 @@
 import { useEffect, useState } from "react";
+import auth from "../../utils/auth";
+import { useGlobalState } from "../../GlobalStateProvider";
 
 export default function Toppings() {
   const [toppings, setToppings] = useState([]);
+  const [role, setRole] = useState("user");
+  const [newTopping, setNewTopping] = useState("");
+  const [toppingModified, setToppingModified] = useState(0);
+  const { dispatch } = useGlobalState();
 
   useEffect(() => {
+    if (auth.loggedIn()) {
+      setRole(auth.getProfile().data.role);
+    }
     (async function () {
       try {
         const response = await fetch("/api/toppings", {
@@ -14,15 +23,58 @@ export default function Toppings() {
         });
         if (!response.ok) {
           console.error("Request Failed");
+          return;
         }
         const data = await response.json();
-        console.log(data);
-        setToppings(data.toppings.map((topping) => topping.toppingName));
+        const allToppings = data.toppings.map((topping) => topping.toppingName);
+        setToppings(allToppings);
+        dispatch({ type: "SET_TOPPINGS", payload: allToppings });
       } catch (err) {
         console.error(err.toString());
       }
     })();
-  }, []);
+  }, [toppingModified]);
+
+  const deleteTopping = async (topping) => {
+    try {
+      const response = await fetch(`/api/toppings/${topping}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${auth.getToken()}`,
+        },
+      });
+      if (!response.ok) {
+        console.error("Request Failed");
+        return;
+      }
+      setToppingModified(toppingModified + 1);
+    } catch (err) {
+      console.error(err.toString());
+    }
+  };
+
+  const handleAddTopping = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch("/api/toppings", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${auth.getToken()}`,
+        },
+        body: JSON.stringify({ toppingName: newTopping }),
+      });
+      if (!response.ok) {
+        console.error("Failed to add topping");
+        return;
+      }
+      setToppingModified(toppingModified + 1);
+      setNewTopping("");
+    } catch (err) {
+      console.error(err.toString());
+    }
+  };
 
   return (
     <div className="flex min-w-full px-20 py-40 justify-center items-center font-semibold flex-col">
@@ -36,11 +88,51 @@ export default function Toppings() {
             <p className="text-3xl">
               {topping[0].toUpperCase() + topping.substring(1)}
             </p>
-            <button className="bg-red-600 text-white rounded p-2">
+            <button
+              className={`${
+                role === "owner"
+                  ? "bg-red-500 cursor-pointer"
+                  : "bg-gray-500 cursor-not-allowed"
+              } text-white rounded p-2`}
+              disabled={role !== "owner"}
+              onClick={() => deleteTopping(topping)}
+            >
               Delete
             </button>
           </div>
         ))}
+
+        <form
+          onSubmit={handleAddTopping}
+          className="min-w-full flex justify-between items-center mt-6"
+        >
+          <input
+            className="border p-2 rounded mt-4 min-w-[80%]"
+            type="text"
+            name="topping"
+            value={newTopping}
+            onChange={(e) => setNewTopping(e.target.value)}
+            placeholder={
+              role === "owner"
+                ? "Enter a new topping"
+                : "Sign in as an owner to add a new topping"
+            }
+            required
+            disabled={role !== "owner"}
+          />
+          <button
+            type="submit"
+            className={`${
+              role === "owner"
+                ? "bg-green-500 cursor-pointer"
+                : "bg-gray-500 cursor-not-allowed"
+            } text-white p-2 rounded mt-4`}
+            disabled={role !== "owner"}
+            onClick={handleAddTopping}
+          >
+            Add
+          </button>
+        </form>
       </div>
     </div>
   );
