@@ -50,7 +50,7 @@ export default function LoginContainer() {
   };
 
   return (
-    <div className="rounded border min-w-[40%] bg-zinc-100 p-4 mr-2">
+    <div className="rounded border min-w-[80%] md:min-w-[40%] bg-zinc-100 p-4 md:mr-2 mt-4 md:mt-0">
       <h1 className="text-center text-2xl">Login</h1>
       <form onSubmit={handleSubmit} className="flex flex-col p-10">
         <input

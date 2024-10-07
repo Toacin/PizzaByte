@@ -52,7 +52,7 @@ export default function SignupContainer() {
   };
 
   return (
-    <div className="rounded border min-w-[40%] bg-zinc-100 p-4 ml-2">
+    <div className="rounded border min-w-[80%] md:min-w-[40%] bg-zinc-100 p-4 md:ml-2 my-4 md:my-0">
       <h1 className="text-center text-2xl">Sign Up</h1>
       <form onSubmit={handleSubmit} className="flex flex-col p-10">
         <input
