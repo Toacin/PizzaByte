@@ -77,6 +77,10 @@ const updateClassic = async (req, res) => {
     const { classicId } = req.params;
     const { name, toppingsStringified } = req.body;
 
+    log.info(name);
+    log.info(toppingsStringified);
+    log.info(classicId);
+
     if (!name || !toppingsStringified) {
       return res
         .status(400)
@@ -89,7 +93,7 @@ const updateClassic = async (req, res) => {
 
     if (!classic) {
       return res
-        .status(400)
+        .status(404)
         .json({ error: true, message: "Classic does not exist" });
     }
 
@@ -98,12 +102,35 @@ const updateClassic = async (req, res) => {
       where: { name: lowerCaseName },
     });
 
-    if (existingClassic) {
+    if (existingClassic && existingClassic.id !== parseInt(classicId)) {
       return res
         .status(400)
         .json({ error: true, message: "Classic name already exists" });
     }
 
+    // Check for duplicate toppings
+    const existingClassics = await PizzaByteClassics.findAll({});
+
+    const existingToppingsStringifiedSet = new Set();
+    for (const existingClassic of existingClassics) {
+      if (existingClassic.id === classicId) {
+        continue;
+      }
+      const toppings = Object.keys(
+        JSON.parse(existingClassic.toppingsStringified),
+      ).sort();
+      existingToppingsStringifiedSet.add(JSON.stringify(toppings));
+    }
+
+    const newToppings = Object.keys(JSON.parse(toppingsStringified)).sort();
+    if (existingToppingsStringifiedSet.has(JSON.stringify(newToppings))) {
+      return res.status(400).json({
+        error: true,
+        message: "Classic with the same toppings already exists",
+      });
+    }
+
+    // Update the classic's name and toppings
     classic.name = lowerCaseName;
     classic.toppingsStringified = toppingsStringified;
     await classic.save();
@@ -144,4 +171,5 @@ module.exports = {
   getAllClassics,
   addClassic,
   deleteClassic,
+  updateClassic,
 };
