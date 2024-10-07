@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import auth from "../../utils/auth";
 import { useGlobalState } from "../../GlobalStateProvider";
+import toast from "react-hot-toast";
 
 export default function Toppings() {
   const [toppings, setToppings] = useState([]);
@@ -23,6 +24,12 @@ export default function Toppings() {
         });
         if (!response.ok) {
           console.error("Request Failed");
+          if (response.status !== 500) {
+            const errorData = await response.json();
+            toast(errorData.message);
+          } else {
+            toast("Something went wrong. Please try again later.");
+          }
           return;
         }
         const data = await response.json();
@@ -31,6 +38,7 @@ export default function Toppings() {
         dispatch({ type: "SET_TOPPINGS", payload: allToppings });
       } catch (err) {
         console.error(err.toString());
+        toast("Something went wrong. Please try again later.");
       }
     })();
   }, [toppingModified]);
@@ -46,11 +54,18 @@ export default function Toppings() {
       });
       if (!response.ok) {
         console.error("Request Failed");
+        if (response.status !== 500) {
+          const errorData = await response.json();
+          toast(errorData.message);
+        } else {
+          toast("Something went wrong. Please try again later.");
+        }
         return;
       }
       setToppingModified(toppingModified + 1);
     } catch (err) {
       console.error(err.toString());
+      toast("Something went wrong. Please try again later.");
     }
   };
 
@@ -67,12 +82,19 @@ export default function Toppings() {
       });
       if (!response.ok) {
         console.error("Failed to add topping");
+        if (response.status !== 500) {
+          const errorData = await response.json();
+          toast(errorData.message);
+        } else {
+          toast("Something went wrong. Please try again later.");
+        }
         return;
       }
       setToppingModified(toppingModified + 1);
       setNewTopping("");
     } catch (err) {
       console.error(err.toString());
+      toast("Something went wrong. Please try again later.");
     }
   };
 

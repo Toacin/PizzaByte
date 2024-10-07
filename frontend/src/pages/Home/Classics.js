@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Pizza from "../../assets/Pizza.jpg";
 import { useGlobalState } from "../../GlobalStateProvider";
 import auth from "../../utils/auth";
+import toast from "react-hot-toast";
 
 export default function Classics() {
   const [classics, setClassics] = useState([]);
@@ -26,11 +27,19 @@ export default function Classics() {
         });
         if (!response.ok) {
           console.error("Request Failed");
+          if (response.status !== 500) {
+            const errorData = await response.json();
+            toast(errorData.message);
+          } else {
+            toast("Something went wrong. Please try again later.");
+          }
+          return;
         }
         const data = await response.json();
         setClassics(data.classics);
       } catch (err) {
         console.error(err.toString());
+        toast("Something went wrong. Please try again later.");
       }
     })();
   }, [classicsModified]);
@@ -72,6 +81,12 @@ export default function Classics() {
       });
       if (!response.ok) {
         console.error("Request Failed");
+        if (response.status !== 500) {
+          const errorData = await response.json();
+          toast(errorData.message);
+        } else {
+          toast("Something went wrong. Please try again later.");
+        }
         return;
       }
       setNewClassic("");
@@ -79,6 +94,7 @@ export default function Classics() {
       setClassicsModified(classicsModified + 1);
     } catch (err) {
       console.error(err.toString());
+      toast("Something went wrong. Please try again later.");
     }
   };
 
@@ -93,11 +109,18 @@ export default function Classics() {
       });
       if (!response.ok) {
         console.error("Request Failed");
+        if (response.status !== 500) {
+          const errorData = await response.json();
+          toast(errorData.message);
+        } else {
+          toast("Something went wrong. Please try again later.");
+        }
         return;
       }
       setClassicsModified(classicsModified + 1);
     } catch (err) {
       console.error(err.toString());
+      toast("Something went wrong. Please try again later.");
     }
   };
 

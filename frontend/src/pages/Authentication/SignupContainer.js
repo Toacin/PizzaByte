@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import auth from "../../utils/auth";
+import toast from "react-hot-toast";
 
 export default function SignupContainer() {
   const navigate = useNavigate();
@@ -33,6 +34,12 @@ export default function SignupContainer() {
       });
       if (!response.ok) {
         console.error("Request Failed");
+        if (response.status !== 500) {
+          const errorData = await response.json();
+          toast(errorData.message);
+        } else {
+          toast("Something went wrong. Please try again later.");
+        }
         return;
       }
       const data = await response.json();
@@ -40,6 +47,7 @@ export default function SignupContainer() {
       navigate("/");
     } catch (error) {
       console.error(error.toString());
+      toast("Something went wrong. Please try again later.");
     }
   };
 
