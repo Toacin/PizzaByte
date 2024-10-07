@@ -125,12 +125,12 @@ export default function Classics() {
   };
 
   return (
-    <div className="flex min-w-full px-20 py-40 justify-center items-center bg-black font-semibold flex-col">
-      <h1 className="text-white text-7xl">Classics</h1>
-      <h2 className="text-3xl text-gray-400 my-4">
+    <div className="flex min-w-full px-2 md:px-20 py-40 justify-center items-center bg-black font-semibold flex-col">
+      <h1 className="text-white text-7xl text-center">Classics</h1>
+      <h2 className="text-3xl text-gray-400 my-4 text-center">
         Classic pizzas that never go out of style.
       </h2>
-      <div className="grid grid-cols-2 gap-4 mt-24 max-w-[50%]">
+      <div className="grid grid-cols-2 gap-4 mt-24 max-w-[90%] md:max-w-[50%]">
         {classics.map((classic) => (
           <div
             key={classic.id}
