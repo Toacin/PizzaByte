@@ -3,6 +3,8 @@ import Pizza from "../../assets/Pizza.jpg";
 import { useGlobalState } from "../../GlobalStateProvider";
 import auth from "../../utils/auth";
 import toast from "react-hot-toast";
+import ClassicsNetworkServices from "./ClassicsNetworkServices";
+import scrollToSection from "../../utils/scrollToSection";
 
 export default function Classics() {
   const [classics, setClassics] = useState([]);
@@ -21,35 +23,20 @@ export default function Classics() {
       setRole(auth.getProfile().data.role);
     }
     (async function () {
-      try {
-        const response = await fetch("/api/classics", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        if (!response.ok) {
-          console.error("Request Failed");
-          if (response.status !== 500) {
-            const errorData = await response.json();
-            toast.error(errorData.message);
-          } else {
-            toast.error("Something went wrong. Please try again later.");
-          }
-          return;
-        }
-        const data = await response.json();
-        setClassics(data.classics);
-      } catch (err) {
-        console.error(err.toString());
-        toast.error("Something went wrong. Please try again later.");
-      }
+      await ClassicsNetworkServices.getAllClassics(toast, setClassics);
     })();
   }, [classicsModified]);
 
   useEffect(() => {
     setToppings(state.toppings);
   }, [state]);
+
+  // scroll to the update form when a classic is edited
+  useEffect(() => {
+    if (editedClassic) {
+      scrollToSection("update-classic");
+    }
+  }, [editedClassic]);
 
   // Handle checkbox change
   const handleCheckboxChange = (topping, formType) => {
@@ -67,67 +54,18 @@ export default function Classics() {
     }
   };
 
-  // scroll to the update form when a classic is edited
-  useEffect(() => {
-    if (editedClassic) {
-      scrollToSection("update-classic");
-    }
-  }, [editedClassic]);
-
-  const scrollToSection = (sectionId) => {
-    const element = document.getElementById(sectionId);
-    const offset = 140;
-
-    if (element) {
-      const elementPosition =
-        element.getBoundingClientRect().top + window.scrollY;
-      const offsetPosition = elementPosition - offset;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: "smooth",
-      });
-    }
-  };
-
   const addClassic = async (e) => {
-    e.preventDefault();
-    try {
-      const toppingsObject = {};
-      for (const topping of selectedToppings) {
-        toppingsObject[topping] = true;
-      }
-
-      const toppingsStringified = JSON.stringify(toppingsObject);
-      const response = await fetch("/api/classics", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          authorization: `Bearer ${auth.getToken()}`,
-        },
-        body: JSON.stringify({
-          name: newClassic,
-          toppingsStringified,
-        }),
-      });
-      if (!response.ok) {
-        console.error("Request Failed");
-        if (response.status !== 500) {
-          const errorData = await response.json();
-          toast.error(errorData.message);
-        } else {
-          toast.error("Something went wrong. Please try again later.");
-        }
-        return;
-      }
-      setNewClassic("");
-      setSelectedToppings([]);
-      setClassicsModified(classicsModified + 1);
-      toast.success("Classic added successfully");
-    } catch (err) {
-      console.error(err.toString());
-      toast.error("Something went wrong. Please try again later.");
-    }
+    await ClassicsNetworkServices.addClassic(
+      e,
+      selectedToppings,
+      auth,
+      newClassic,
+      toast,
+      setNewClassic,
+      setSelectedToppings,
+      setClassicsModified,
+      classicsModified,
+    );
   };
 
   const initiateUpdate = (classic) => {
@@ -150,68 +88,27 @@ export default function Classics() {
   };
 
   const updateClassic = async (e) => {
-    e.preventDefault();
-    try {
-      const toppingsObject = {};
-      for (const topping of updatedToppings) {
-        toppingsObject[topping] = true;
-      }
-
-      const toppingsStringified = JSON.stringify(toppingsObject);
-      const response = await fetch(`/api/classics/${editedClassic}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          authorization: `Bearer ${auth.getToken()}`,
-        },
-        body: JSON.stringify({
-          name: updatedClassicName,
-          toppingsStringified,
-        }),
-      });
-      if (!response.ok) {
-        console.error("Request Failed");
-        if (response.status !== 500) {
-          const errorData = await response.json();
-          toast.error(errorData.message);
-        } else {
-          toast.error("Something went wrong. Please try again later.");
-        }
-        return;
-      }
-      setClassicsModified(classicsModified + 1);
-      setEditedClassic("");
-      toast.success("Classic updated successfully");
-    } catch (err) {
-      console.error(err.toString());
-      toast.error("Something went wrong. Please try again later.");
-    }
+    await ClassicsNetworkServices.updateClassic(
+      e,
+      updatedToppings,
+      editedClassic,
+      auth,
+      updatedClassicName,
+      toast,
+      setEditedClassic,
+      setClassicsModified,
+      classicsModified,
+    );
   };
 
   const deleteClassic = async (classicId) => {
-    try {
-      const response = await fetch(`/api/classics/${classicId}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          authorization: `Bearer ${auth.getToken()}`,
-        },
-      });
-      if (!response.ok) {
-        console.error("Request Failed");
-        if (response.status !== 500) {
-          const errorData = await response.json();
-          toast.error(errorData.message);
-        } else {
-          toast.error("Something went wrong. Please try again later.");
-        }
-        return;
-      }
-      setClassicsModified(classicsModified + 1);
-    } catch (err) {
-      console.error(err.toString());
-      toast.error("Something went wrong. Please try again later.");
-    }
+    await ClassicsNetworkServices.deleteClassic(
+      classicId,
+      auth,
+      toast,
+      setClassicsModified,
+      classicsModified,
+    );
   };
 
   const cancelUpdate = () => {
@@ -221,7 +118,7 @@ export default function Classics() {
   };
 
   return (
-    <div className="flex min-w-full px-2 md:px-20 py-40 justify-center items-center bg-black font-semibold flex-col">
+    <div className="flex min-w-full px-2 md:px-20 pt-28 pb-40 justify-center items-center bg-black font-semibold flex-col">
       <h1 className="text-white text-7xl text-center" id="classic-title">
         Classics
       </h1>
@@ -229,51 +126,111 @@ export default function Classics() {
         Classic pizzas that never go out of style.
       </h2>
       <div className="grid grid-cols-2 gap-4 mt-24 max-w-[90%] md:max-w-[50%]">
-        {classics.map((classic) => (
-          <div
-            key={classic.id}
-            className="bg-red-600 p-4 rounded shadow-lg flex flex-col text-center"
-          >
-            <h3 className="text-3xl font-semibold text-white">
-              {classic.name[0].toUpperCase() + classic.name.substring(1)}
-            </h3>
-            <p className="mt-4 text-2xl text-gray-300 underline">Toppings:</p>
-            <ul className="text-gray-300 flex flex-wrap justify-center mt-2 max-w-full">
-              {Object.keys(JSON.parse(classic.toppingsStringified)).map(
-                (topping) => (
-                  <li
-                    key={topping}
-                    className="px-2 py-1 bg-red-200 text-black border-2 border-black min-w-fit text-center my-1 mx-1 rounded-full"
-                  >
-                    {topping[0].toUpperCase() + topping.substring(1)}
-                  </li>
-                ),
-              )}
-            </ul>
-            <div className="flex justify-center items-center mt-5">
-              <button
-                className={`rounded p-2 ml-2 ${role === "chef" ? "cursor-pointer bg-white" : "cursor-not-allowed bg-gray-500"}`}
-                disabled={role !== "chef"}
-                onClick={() => initiateUpdate(classic)}
-              >
-                Edit
-              </button>
-              <button
-                className={`rounded p-2 ml-2  ${role === "chef" ? "cursor-pointer bg-red-200 text-red-500" : "cursor-not-allowed bg-gray-500"}`}
-                onClick={() => deleteClassic(classic.id)}
-                disabled={role !== "chef"}
-              >
-                Delete
-              </button>
-            </div>
-            <div className="flex items-center justify-center min-w-full mt-8">
-              <img className="max-w-[80%] rounded" src={Pizza} alt="Pizza" />
-            </div>
-          </div>
-        ))}
+        <MapExistingToppings
+          {...{ classics, role, initiateUpdate, deleteClassic }}
+        />
       </div>
 
       {/* update form */}
+      <UpdateClassicForm
+        {...{
+          editedClassic,
+          updateClassic,
+          role,
+          updatedClassicName,
+          setUpdatedClasicName,
+          toppings,
+          updatedToppings,
+          handleCheckboxChange,
+          cancelUpdate,
+        }}
+      />
+
+      {/* add form */}
+      <AddClassicForm
+        {...{
+          addClassic,
+          role,
+          newClassic,
+          setNewClassic,
+          toppings,
+          selectedToppings,
+          handleCheckboxChange,
+        }}
+      />
+    </div>
+  );
+}
+
+// map existing toppings
+function MapExistingToppings({
+  classics,
+  role,
+  initiateUpdate,
+  deleteClassic,
+}) {
+  return (
+    <>
+      {classics.map((classic) => (
+        <div
+          key={classic.id}
+          className="bg-red-600 p-4 rounded shadow-lg flex flex-col text-center"
+        >
+          <h3 className="text-3xl font-semibold text-white">
+            {classic.name[0].toUpperCase() + classic.name.substring(1)}
+          </h3>
+          <p className="mt-4 text-2xl text-gray-300 underline">Toppings:</p>
+          <ul className="text-gray-300 flex flex-wrap justify-center mt-2 max-w-full">
+            {Object.keys(JSON.parse(classic.toppingsStringified)).map(
+              (topping) => (
+                <li
+                  key={topping}
+                  className="px-2 py-1 bg-red-200 text-black border-2 border-black min-w-fit text-center my-1 mx-1 rounded-full"
+                >
+                  {topping[0].toUpperCase() + topping.substring(1)}
+                </li>
+              ),
+            )}
+          </ul>
+          <div className="flex justify-center items-center mt-5">
+            <button
+              className={`rounded p-2 ml-2 ${role === "chef" ? "cursor-pointer bg-white" : "cursor-not-allowed bg-gray-500"}`}
+              disabled={role !== "chef"}
+              onClick={() => initiateUpdate(classic)}
+            >
+              Edit
+            </button>
+            <button
+              className={`rounded p-2 ml-2  ${role === "chef" ? "cursor-pointer bg-red-200 text-red-500" : "cursor-not-allowed bg-gray-500"}`}
+              onClick={() => deleteClassic(classic.id)}
+              disabled={role !== "chef"}
+            >
+              Delete
+            </button>
+          </div>
+          <div className="flex items-center justify-center min-w-full mt-8">
+            <img className="max-w-[80%] rounded" src={Pizza} alt="Pizza" />
+          </div>
+        </div>
+      ))}
+    </>
+  );
+}
+
+// update classic form
+function UpdateClassicForm({
+  editedClassic,
+  updateClassic,
+  role,
+  updatedClassicName,
+  setUpdatedClasicName,
+  toppings,
+  updatedToppings,
+  handleCheckboxChange,
+  cancelUpdate,
+}) {
+  return (
+    <>
       {editedClassic && (
         <form
           className={`rounded border w-[100%] md:w-[80%] lg:w-[50%] bg-zinc-100 p-4 mt-10`}
@@ -326,50 +283,62 @@ export default function Classics() {
           </button>
         </form>
       )}
+    </>
+  );
+}
 
-      {/* add form */}
-      <form
-        className="rounded border w-[100%] md:w-[80%] lg:w-[50%] bg-zinc-100 p-4 mt-10"
-        onSubmit={addClassic}
+// add classic form
+function AddClassicForm({
+  addClassic,
+  role,
+  newClassic,
+  setNewClassic,
+  toppings,
+  selectedToppings,
+  handleCheckboxChange,
+}) {
+  return (
+    <form
+      className="rounded border w-[100%] md:w-[80%] lg:w-[50%] bg-zinc-100 p-4 mt-10"
+      onSubmit={addClassic}
+    >
+      <h1 className="text-4xl text-center">New Classic Creation</h1>
+      <input
+        className="border p-2 rounded my-6 min-w-full"
+        type="text"
+        placeholder={
+          role === "chef"
+            ? "Enter a new classic"
+            : "Sign in as a chef to add a new classic"
+        }
+        value={newClassic}
+        onChange={(e) => setNewClassic(e.target.value)}
+        required
+        disabled={role !== "chef"}
+      />
+      <h2 className="text-2xl text-center">Add Toppings</h2>
+
+      <div className="flex flex-wrap items-center mt-5">
+        {toppings.map((topping) => (
+          <label key={topping} className="flex items-center my-2">
+            <input
+              type="checkbox"
+              className="ml-5 mr-1"
+              checked={selectedToppings.includes(topping)}
+              onChange={() => handleCheckboxChange(topping, "add")}
+              disabled={role !== "chef"}
+            />
+            {topping[0].toUpperCase() + topping.substring(1)}
+          </label>
+        ))}
+      </div>
+      <button
+        type="submit"
+        className={`${role === "chef" ? "bg-red-500 cursor-pointer" : "bg-gray-200 cursor-not-allowed"}  text-white p-2 rounded mt-8 min-w-full`}
+        disabled={role !== "chef"}
       >
-        <h1 className="text-4xl text-center">New Classic Creation</h1>
-        <input
-          className="border p-2 rounded my-6 min-w-full"
-          type="text"
-          placeholder={
-            role === "chef"
-              ? "Enter a new classic"
-              : "Sign in as a chef to add a new classic"
-          }
-          value={newClassic}
-          onChange={(e) => setNewClassic(e.target.value)}
-          required
-          disabled={role !== "chef"}
-        />
-        <h2 className="text-2xl text-center">Add Toppings</h2>
-
-        <div className="flex flex-wrap items-center mt-5">
-          {toppings.map((topping) => (
-            <label key={topping} className="flex items-center my-2">
-              <input
-                type="checkbox"
-                className="ml-5 mr-1"
-                checked={selectedToppings.includes(topping)}
-                onChange={() => handleCheckboxChange(topping, "add")}
-                disabled={role !== "chef"}
-              />
-              {topping[0].toUpperCase() + topping.substring(1)}
-            </label>
-          ))}
-        </div>
-        <button
-          type="submit"
-          className={`${role === "chef" ? "bg-red-500 cursor-pointer" : "bg-gray-200 cursor-not-allowed"}  text-white p-2 rounded mt-8 min-w-full`}
-          disabled={role !== "chef"}
-        >
-          Add Classic
-        </button>
-      </form>
-    </div>
+        Add Classic
+      </button>
+    </form>
   );
 }

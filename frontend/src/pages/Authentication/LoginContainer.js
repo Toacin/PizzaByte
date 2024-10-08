@@ -2,6 +2,7 @@ import { useState } from "react";
 import auth from "../../utils/auth";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import AuthenticationNetworkServices from "./AuthenticationNetworkServices";
 
 export default function LoginContainer() {
   const navigate = useNavigate();
@@ -21,32 +22,13 @@ export default function LoginContainer() {
 
   // Handle form submission
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(loginData),
-      });
-      if (!response.ok) {
-        console.error("Request Failed");
-        if (response.status !== 500) {
-          const errorData = await response.json();
-          toast.error(errorData.message);
-        } else {
-          toast.error("Something went wrong. Please try again later.");
-        }
-        return;
-      }
-      const data = await response.json();
-      auth.login(data.token);
-      navigate("/");
-    } catch (error) {
-      console.error(error.toString());
-      toast.error("Something went wrong. Please try again later.");
-    }
+    await AuthenticationNetworkServices.login(
+      e,
+      loginData,
+      toast,
+      auth,
+      navigate,
+    );
   };
 
   return (
@@ -55,11 +37,12 @@ export default function LoginContainer() {
       <form onSubmit={handleSubmit} className="flex flex-col p-10">
         <input
           className="border p-2 rounded mb-2"
-          type="text"
+          type="email"
           name="email"
           placeholder="Email"
           value={loginData.email}
           onChange={handleChange}
+          required
         />
         <input
           className="border p-2 rounded mb-2"
@@ -68,6 +51,7 @@ export default function LoginContainer() {
           placeholder="Password"
           value={loginData.password}
           onChange={handleChange}
+          required
         />
         <button type="submit" className="bg-red-500 text-white p-2 rounded">
           Log In

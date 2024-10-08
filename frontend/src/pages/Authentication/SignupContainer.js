@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import auth from "../../utils/auth";
 import toast from "react-hot-toast";
+import AuthenticationNetworkServices from "./AuthenticationNetworkServices";
 
 export default function SignupContainer() {
   const navigate = useNavigate();
@@ -23,32 +24,13 @@ export default function SignupContainer() {
 
   // Handle form submission
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await fetch("/api/auth/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-      if (!response.ok) {
-        console.error("Request Failed");
-        if (response.status !== 500) {
-          const errorData = await response.json();
-          toast.error(errorData.message);
-        } else {
-          toast.error("Something went wrong. Please try again later.");
-        }
-        return;
-      }
-      const data = await response.json();
-      auth.login(data.token);
-      navigate("/");
-    } catch (error) {
-      console.error(error.toString());
-      toast.error("Something went wrong. Please try again later.");
-    }
+    await AuthenticationNetworkServices.signup(
+      e,
+      formData,
+      toast,
+      auth,
+      navigate,
+    );
   };
 
   return (
@@ -66,7 +48,7 @@ export default function SignupContainer() {
         />
         <input
           className="border p-2 rounded mb-2"
-          type="text"
+          type="email"
           name="email"
           placeholder="Email"
           value={formData.email}
@@ -85,39 +67,7 @@ export default function SignupContainer() {
 
         <div className="mb-4">
           <h2 className="mb-2">Select Role</h2>
-          <div className="flex items-center mb-2">
-            <input
-              type="radio"
-              id="user"
-              name="role"
-              value="user"
-              checked={formData.role === "user"}
-              onChange={handleChange}
-            />
-            <label htmlFor="user">User</label>
-          </div>
-          <div className="flex items-center mb-2">
-            <input
-              type="radio"
-              id="chef"
-              name="role"
-              value="chef"
-              checked={formData.role === "chef"}
-              onChange={handleChange}
-            />
-            <label htmlFor="chef">Chef</label>
-          </div>
-          <div className="flex items-center mb-2">
-            <input
-              type="radio"
-              id="owner"
-              name="role"
-              value="owner"
-              checked={formData.role === "owner"}
-              onChange={handleChange}
-            />
-            <label htmlFor="owner">Owner</label>
-          </div>
+          <RenderRadioInputs formData={formData} handleChange={handleChange} />
         </div>
 
         <button type="submit" className="bg-red-500 text-white p-2 rounded">
@@ -125,5 +75,45 @@ export default function SignupContainer() {
         </button>
       </form>
     </div>
+  );
+}
+
+function RenderRadioInputs({ formData, handleChange }) {
+  return (
+    <>
+      <div className="flex items-center mb-2">
+        <input
+          type="radio"
+          id="user"
+          name="role"
+          value="user"
+          checked={formData.role === "user"}
+          onChange={handleChange}
+        />
+        <label htmlFor="user">User</label>
+      </div>
+      <div className="flex items-center mb-2">
+        <input
+          type="radio"
+          id="chef"
+          name="role"
+          value="chef"
+          checked={formData.role === "chef"}
+          onChange={handleChange}
+        />
+        <label htmlFor="chef">Chef</label>
+      </div>
+      <div className="flex items-center mb-2">
+        <input
+          type="radio"
+          id="owner"
+          name="role"
+          value="owner"
+          checked={formData.role === "owner"}
+          onChange={handleChange}
+        />
+        <label htmlFor="owner">Owner</label>
+      </div>
+    </>
   );
 }
