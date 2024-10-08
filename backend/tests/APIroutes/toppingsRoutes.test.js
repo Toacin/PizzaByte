@@ -1,6 +1,6 @@
 const request = require("supertest");
 const startServer = require("../../server");
-const { PizzaByteUser, PizzaByteToppings } = require("../../models");
+const { PizzaByteUser } = require("../../models");
 
 describe("GET /api/toppings", () => {
   let server;
@@ -35,20 +35,20 @@ describe("GET /api/toppings", () => {
       role: "owner",
     });
     const userToken = createdUser.body.token;
-    const mockOrder = {
+    const mockTopping = {
       toppingName: "Anchovies",
     };
 
-    // submit an order for a logged in user
+    // create new topping
     const response = await request(serverApp)
       .post("/api/toppings")
-      .send(mockOrder)
+      .send(mockTopping)
       .set("Authorization", `Bearer ${userToken}`);
 
     // submit an order for a duplicate topping
     const response2 = await request(serverApp)
       .post("/api/toppings")
-      .send(mockOrder)
+      .send(mockTopping)
       .set("Authorization", `Bearer ${userToken}`);
 
     // delete the topping
