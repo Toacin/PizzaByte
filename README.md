@@ -150,6 +150,8 @@ Run the following command to check all formatting:
 npm run lint
 ```
 
+<span style="color: red;">NOTE:</span> Pull requests must pass the formatting check, enforced via github actions.
+
 [Return to Top](#table-of-contents)
 
 ### Running Application/Migrating and Seeding Databases
