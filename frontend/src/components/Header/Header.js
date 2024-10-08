@@ -28,7 +28,10 @@ export default function Header() {
         />
         <div>
           {auth.loggedIn() ? (
-            <button className="bg-red-500 rounded p-2" onClick={logout}>
+            <button
+              className="bg-red-500 rounded p-2 text-white"
+              onClick={logout}
+            >
               Log Out
             </button>
           ) : (
