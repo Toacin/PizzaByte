@@ -1,6 +1,13 @@
 import { FaPizzaSlice } from "react-icons/fa6";
+import { useNavigate } from "react-router-dom";
 
 export default function () {
+  const navigate = useNavigate();
+
+  const navigateToAuthentication = () => {
+    navigate("/authentication");
+  };
+
   return (
     <div className="flex min-w-full px-20 py-40 justify-center items-center bg-black font-semibold flex-col">
       <h1
@@ -32,6 +39,13 @@ export default function () {
         structures to support pizza orders in the future. Sign in as owner or
         chef to get started!
       </p>
+      <button
+        type="submit"
+        className="bg-red-500 text-white p-4 rounded mt-16 text-3xl"
+        onClick={navigateToAuthentication}
+      >
+        Get Started
+      </button>
     </div>
   );
 }
