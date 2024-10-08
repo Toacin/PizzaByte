@@ -19,7 +19,7 @@
 
 ## Overview
 
-### PizzaByte is a full-stack application built to manage menus and ingredients inventory for pizza restaurants, providing an easy to use platform for both owners and chefs.
+### PizzaByte is a full-stack, mobile-responsive web application built to manage menus and ingredients inventory for pizza restaurants, providing an easy to use platform for both owners and chefs.
 
 ![PizzaByte Website Landing Page](./read_me_assets/PizzaByteImage.png)
 
@@ -133,7 +133,11 @@ To run tests locally, run the following commands from the root level of the appl
 npm run test
 ```
 
-This will initiate testing for the backend first, and then the frontend. Alternatively, the same commaned can be ran while within either the frontend or backend directories to run their respective tests indpendently. Test coverage data is displayed and subsequently logged in a `coverage` directory found in both frontend and backend directories.
+This will initiate testing for the backend first, and then the frontend.
+
+IMPORTANT: Backend testing initiated migrations and seeding to the configured test database. Ensure that the test database has the same name as the development database followed by "_test".
+
+Alternatively, the same commaned can be ran while within either the frontend or backend directories to run their respective tests indpendently. Test coverage data is displayed and subsequently logged in a `coverage` directory found in both frontend and backend directories.
 
 [Return to Top](#table-of-contents)
 
