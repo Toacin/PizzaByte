@@ -46,7 +46,7 @@ const debugFileTransport = new winston.transports.File({
 });
 
 const transports = () => {
-  if (process.env.ENVIRONMENT == "production") {
+  if (process.env.NODE_ENV == "production") {
     return [prodConsoleTransport];
   } else {
     return [devConsoleTransport, errorFileTransport, debugFileTransport];
