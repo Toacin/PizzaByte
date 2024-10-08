@@ -166,7 +166,11 @@ Run the following command to run the application locally in a development enviro
 npm run dev
 ```
 
-<span style="color: red;">NOTE:</span>  Running this command will first initiate database migrations, and subsequently database seeding. Feel free to remove that from the script if this is not a desired behavior. The following command can be ran from the backend directory to migrate or seed the database without starting the application. 
+<span style="color: red;">NOTE:</span>  Running this command will first initiate database migrations, and subsequently database seeding. Feel free to remove that from the script if this is not a desired behavior.
+
+If the application doesn't open in the browser right away, visit `http://localhost:3000` on the browser to view the application.
+
+The following command can be ran from the backend directory to migrate or seed the database without starting the application. 
 
 ```
 npm run migrate
