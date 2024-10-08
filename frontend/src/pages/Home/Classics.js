@@ -313,7 +313,6 @@ export default function Classics() {
           <button
             type="submit"
             className={`${role === "chef" ? "bg-black cursor-pointer" : "bg-gray-200 cursor-not-allowed"}  text-white p-2 rounded mt-8 min-w-full`}
-            onClick={updateClassic}
             disabled={role !== "chef"}
           >
             Update Classic
@@ -329,7 +328,10 @@ export default function Classics() {
       )}
 
       {/* add form */}
-      <form className="rounded border w-[100%] md:w-[80%] lg:w-[50%] bg-zinc-100 p-4 mt-10">
+      <form
+        className="rounded border w-[100%] md:w-[80%] lg:w-[50%] bg-zinc-100 p-4 mt-10"
+        onSubmit={addClassic}
+      >
         <h1 className="text-4xl text-center">New Classic Creation</h1>
         <input
           className="border p-2 rounded my-6 min-w-full"
@@ -363,7 +365,6 @@ export default function Classics() {
         <button
           type="submit"
           className={`${role === "chef" ? "bg-red-500 cursor-pointer" : "bg-gray-200 cursor-not-allowed"}  text-white p-2 rounded mt-8 min-w-full`}
-          onClick={addClassic}
           disabled={role !== "chef"}
         >
           Add Classic
