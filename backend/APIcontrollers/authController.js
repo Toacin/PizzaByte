@@ -1,6 +1,6 @@
 const { PizzaByteUser } = require("../models");
 const log = require("../logger");
-const signAuthToken = require("../utils/signAuthToken");
+const signAuthToken = require("../auth/signAuthToken");
 
 const signup = async (req, res) => {
   const { firstName, email, password, role = "user" } = req.body;
