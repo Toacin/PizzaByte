@@ -182,6 +182,6 @@ As stated earlier, this application is set up to eventually take orders from reg
 ## Credits
 
 Logo designed by myself on Canva.
-Images are royalty free from pexels.
+Images are royalty free from Pexels.
 
 [Return to Top](#table-of-contents)
