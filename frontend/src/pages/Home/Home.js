@@ -4,14 +4,19 @@ import JumboTron from "./JumboTron";
 import Welcome from "./Welcome";
 import Classics from "./Classics";
 import Toppings from "./Toppings";
+import Auth from "../../utils/auth";
 
 export default function Home() {
   return (
     <div className="pt-10">
       <JumboTron />
       <RedDivider />
-      <Welcome />
-      <RedDividerHalfHeight />
+      {!Auth.loggedIn() && (
+        <>
+          <Welcome />
+          <RedDividerHalfHeight />
+        </>
+      )}
       <Classics />
       <RedDividerHalfHeight />
       <Toppings />
