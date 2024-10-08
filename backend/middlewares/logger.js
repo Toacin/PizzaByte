@@ -6,7 +6,7 @@ const middleware = expressWinston.logger({
   winstonInstance: log,
   meta: true,
   expressFormat: true,
-  colorize: process.env.ENVIRONMENT === "production" ? false : true,
+  colorize: process.env.NODE_ENV === "production" ? false : true,
 });
 
 module.exports = middleware;
